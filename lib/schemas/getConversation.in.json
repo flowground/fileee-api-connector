@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

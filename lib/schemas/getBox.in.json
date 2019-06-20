@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "boxId": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

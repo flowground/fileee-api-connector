@@ -1,0 +1,84 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "role": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "VIEWER",
+                "EDITOR",
+                "ADMIN"
+            ]
+        },
+        "resendInvitationEmail": {
+            "required": false,
+            "type": "boolean"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "5798835568c0e021ebc6eb48"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Tobias Meier"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "USER",
+                    "enum": [
+                        "USER",
+                        "COMPANY",
+                        "EXTERNAL",
+                        "CUSTOMER",
+                        "OTHER"
+                    ]
+                },
+                "kind": {
+                    "type": "string",
+                    "example": "customer",
+                    "description": "Variable to distinguish between different kinds of participants, defined by company"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "example": "+491738231242",
+                    "description": "Optional telephone number for external participants."
+                },
+                "joined": {
+                    "type": "boolean",
+                    "description": "True if the participant has accepted any terms and/or the invitation to join this conversation.",
+                    "readOnly": true,
+                    "default": false
+                },
+                "externalId": {
+                    "type": "string",
+                    "example": "foo.bar@example.com",
+                    "description": "The original email address of a participant that was converted from type EXTERNAL to USER",
+                    "readOnly": true
+                },
+                "attributes": {
+                    "type": "object",
+                    "description": "A map of custom attributes or properties that are associated with this participant.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

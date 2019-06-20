@@ -1,0 +1,72 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "discriminator": {
+                "propertyName": "type"
+            },
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "5798835568c0e021ebc6eb47"
+                },
+                "senderId": {
+                    "type": "string",
+                    "example": "5798835568c0e021ebc6eb48"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "CHAT",
+                    "enum": [
+                        "DOCUMENT",
+                        "CHAT",
+                        "BONUS",
+                        "USER_INFO",
+                        "STATUS",
+                        "META_INFORMATION",
+                        "VOICE",
+                        "RATING",
+                        "REQUEST_DOCUMENTS",
+                        "CONTACT_INFORMATION",
+                        "CHANGE_IDENTIFIERS",
+                        "REQUEST_ACTION",
+                        "ACTION_RESULT",
+                        "PARTICIPANT_STATE",
+                        "INFO",
+                        "PLACEHOLDER",
+                        "NOTIFICATION",
+                        "UNKNOWN"
+                    ]
+                },
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-01-28T18:14:55.600+0000"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Hello there"
+                },
+                "onlyVisibleFor": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

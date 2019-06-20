@@ -1,0 +1,91 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "boxNr",
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "5798835568c0e021ebc6eb3e"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-01-28T17:37:11.482+0000",
+                    "readOnly": true
+                },
+                "modified": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-01-28T17:37:11.482+0000",
+                    "readOnly": true
+                },
+                "deleted": {
+                    "type": "boolean",
+                    "example": false,
+                    "default": false
+                },
+                "version": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "localVersion": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "documents": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "documentId": {
+                                "type": "string"
+                            },
+                            "pageCount": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        }
+                    }
+                },
+                "removedDocuments": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "documentId": {
+                                "type": "string"
+                            },
+                            "pageCount": {
+                                "type": "integer",
+                                "format": "int32"
+                            }
+                        }
+                    }
+                },
+                "boxNr": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "boxName": {
+                    "type": "string"
+                },
+                "qrCode": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

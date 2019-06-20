@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "request": {
+                    "description": "The content of this form parameter should follow the format described for the `requestBody` parameter described below (this is a workaround for a limitation of the Swagger format).",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "request"
+            ]
+        }
+    }
+}

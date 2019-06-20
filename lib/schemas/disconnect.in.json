@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "properties": {
+        "customerId": {
+            "required": true,
+            "type": "string"
+        },
+        "serviceInstanceId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

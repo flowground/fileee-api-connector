@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationToken": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "fl7VBINFHCDuzsb9Kw6hUnYckJAFJqg8OWiIn2rl"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        }
+    }
+}

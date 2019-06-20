@@ -1,0 +1,25 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "document": {
+                    "description": "Initial document meta-data.",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "Additional meta information that is not directly part of the document.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "document"
+            ]
+        }
+    }
+}

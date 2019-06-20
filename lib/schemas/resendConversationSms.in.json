@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "externalToken": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

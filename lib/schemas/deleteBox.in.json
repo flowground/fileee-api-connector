@@ -1,0 +1,20 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "fileeeBoxId": {
+                    "type": "string"
+                },
+                "userPassword": {
+                    "type": "string"
+                },
+                "deleteDocuments": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        }
+    }
+}

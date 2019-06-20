@@ -1,0 +1,25 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "description": "The OAuth client ID of your application",
+                    "type": "string"
+                },
+                "client_secret": {
+                    "description": "The OAuth client secret of your application",
+                    "type": "string"
+                },
+                "token": {
+                    "description": "The token you want to revoke",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "client_id"
+            ]
+        }
+    }
+}

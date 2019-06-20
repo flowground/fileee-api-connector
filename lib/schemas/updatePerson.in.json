@@ -1,0 +1,119 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "5798835568c0e021ebc6eb3e"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-01-28T17:37:11.482+0000",
+                    "readOnly": true
+                },
+                "modified": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2016-01-28T17:37:11.482+0000",
+                    "readOnly": true
+                },
+                "deleted": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "street": {
+                                "type": "string"
+                            },
+                            "zipCode": {
+                                "type": "string"
+                            },
+                            "city": {
+                                "type": "string"
+                            },
+                            "countryCode": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "logo": {
+                    "type": "string"
+                },
+                "contactData": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "PHONE",
+                                    "EMAIL",
+                                    "FAX",
+                                    "URL",
+                                    "FACEBOOK",
+                                    "TWITTER",
+                                    "GOOGLE_PLUS"
+                                ]
+                            },
+                            "description": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "branding": {
+                    "type": "object",
+                    "properties": {
+                        "logoBackgroundColorCode": {
+                            "type": "string"
+                        },
+                        "headerBackgroundColorCode": {
+                            "type": "string"
+                        },
+                        "headerTextColorCode": {
+                            "type": "string"
+                        },
+                        "logoTextColorCode": {
+                            "type": "string"
+                        },
+                        "brandLinkColorCode": {
+                            "type": "string"
+                        },
+                        "brandTextColorCode": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

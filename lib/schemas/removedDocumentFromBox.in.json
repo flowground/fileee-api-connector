@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": {
+        "boxId": {
+            "required": true,
+            "type": "string"
+        },
+        "documentId": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "properties": {
+        "documentId": {
+            "required": true,
+            "type": "string"
+        },
+        "mode": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "download",
+                "print"
+            ],
+            "default": "download"
+        },
+        "pages": {
+            "required": false,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "max_size": {
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+        }
+    }
+}

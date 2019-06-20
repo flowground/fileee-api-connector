@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "properties": {
+        "moduleId": {
+            "required": true,
+            "type": "string"
+        },
+        "messageId": {
+            "required": true,
+            "type": "string"
+        },
+        "mode": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "download",
+                "inline"
+            ],
+            "default": "inline"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

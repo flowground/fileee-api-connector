@@ -1,0 +1,47 @@
+{
+    "type": "object",
+    "properties": {
+        "customerId": {
+            "required": true,
+            "type": "string"
+        },
+        "serviceInstanceId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "verification": {
+                    "description": "Information needed to update verification.",
+                    "type": "object",
+                    "required": [
+                        "type"
+                    ],
+                    "properties": {
+                        "pin": {
+                            "type": "string",
+                            "description": "The PIN the user has to enter to verify himself or herself."
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "The type of verification (NONE or TAN)"
+                        },
+                        "conversationOptions": {
+                            "type": "object",
+                            "properties": {
+                                "templateId": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

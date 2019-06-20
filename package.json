@@ -1,0 +1,15 @@
+{
+    "name": "fileee-api-connector",
+    "version": "2.0.0",
+    "description": "The fileee API contains methods for accessing documents and other data in a fileee user account. API built on 2019-06-18T22:01:06Z.\n\n- Authorization follows the [OAuth 2.0](https://tools.ietf.org/html/rfc6749) standard, specifically the [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) type.\n  - Most API calls require the access token in the `Authorization` HTTP request header as a string     of the form `Bearer 12345xy` (where 12345xy needs to be replaced with the actual access token).\n  - The _authorization endpoint_ is available at an URL of the form `https://my.workeee.de/oauth/authorize?response_type=code`     with the following additional request parameters: `client_id=` *your unique client ID* (REQUIRED),     `redirect_uri=` *the URI where the client should be redirected after authorization* (REQUIRED),     `scope=` *the space separated list of requested scopes* (OPTIONAL), `state=` *will be passed back to      the redirect endpoint unmodified* (RECOMMENDED).\n- All unique IDs are strings in the format of [BSON ObjectIds](https://docs.mongodb.com/manual/reference/bson-types/#objectid).",
+    "main": "component.json",
+    "dependencies": {
+        "elasticio-node": "0.0.9",
+        "elasticio-sailor-nodejs": "^2.2.1",
+        "swagger-client": "^3.8.22"
+    },
+    "author": {
+        "name": "Deutsche Telekom AG"
+    },
+    "license": "Apache-2.0"
+}

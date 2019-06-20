@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "properties": {
+        "testPhone": {
+            "required": false,
+            "type": "boolean"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "customerId",
+                "email",
+                "firstName",
+                "lastName",
+                "phoneNumber"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "Tobias.Tester@example.com"
+                },
+                "customerId": {
+                    "type": "string",
+                    "example": "123abc"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Tobias"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Tester"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "example": "+49123456789"
+                },
+                "templateId": {
+                    "type": "string",
+                    "example": "fooBarTemplate"
+                }
+            }
+        }
+    }
+}

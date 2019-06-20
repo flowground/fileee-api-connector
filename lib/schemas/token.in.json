@@ -1,0 +1,51 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "grant_type": {
+                    "description": "The OAuth grant type, i.e. which kind of token you have and want",
+                    "type": "string",
+                    "enum": [
+                        "authorization_code",
+                        "refresh_token",
+                        "password"
+                    ],
+                    "default": "authorization_code"
+                },
+                "client_id": {
+                    "description": "The OAuth client ID of your application",
+                    "type": "string"
+                },
+                "client_secret": {
+                    "description": "The OAuth client secret of your application",
+                    "type": "string"
+                },
+                "redirect_uri": {
+                    "description": "A redirect URI of your application (needs to be registered)",
+                    "type": "string"
+                },
+                "code": {
+                    "description": "The authorization code you want to exchange.",
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "description": "The refresh token for which you want a new access token",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "The username when using password-grant-type",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "The password when using password-grant-type",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "grant_type"
+            ]
+        }
+    }
+}

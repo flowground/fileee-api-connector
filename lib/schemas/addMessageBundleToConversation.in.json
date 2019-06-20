@@ -1,0 +1,330 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "messageBundleId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "metaData": {
+                    "type": "object",
+                    "description": "Can optionally contain additional meta-data for the conversation.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "participants": {
+                    "type": "array",
+                    "description": "Can optionally contain one or more participants which will be initially invited to the conversation.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "name",
+                            "type"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb48"
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Tobias Meier"
+                            },
+                            "type": {
+                                "type": "string",
+                                "example": "USER",
+                                "enum": [
+                                    "USER",
+                                    "COMPANY",
+                                    "EXTERNAL",
+                                    "CUSTOMER",
+                                    "OTHER"
+                                ]
+                            },
+                            "kind": {
+                                "type": "string",
+                                "example": "customer",
+                                "description": "Variable to distinguish between different kinds of participants, defined by company"
+                            },
+                            "phoneNumber": {
+                                "type": "string",
+                                "example": "+491738231242",
+                                "description": "Optional telephone number for external participants."
+                            },
+                            "joined": {
+                                "type": "boolean",
+                                "description": "True if the participant has accepted any terms and/or the invitation to join this conversation.",
+                                "readOnly": true,
+                                "default": false
+                            },
+                            "externalId": {
+                                "type": "string",
+                                "example": "foo.bar@example.com",
+                                "description": "The original email address of a participant that was converted from type EXTERNAL to USER",
+                                "readOnly": true
+                            },
+                            "attributes": {
+                                "type": "object",
+                                "description": "A map of custom attributes or properties that are associated with this participant.",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "overrides": {
+                    "description": "Can optionally contain values which should be taken to update the corresponding fields in the newly created conversation instance.",
+                    "type": "object",
+                    "properties": {
+                        "tasks": {
+                            "type": "object",
+                            "description": "Can optionally contain one or more tasks overrides, containing values which will be used to update the tasks of the existing conversation.",
+                            "additionalProperties": {
+                                "type": "object",
+                                "required": [
+                                    "identifier"
+                                ],
+                                "properties": {
+                                    "identifier": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Can optionally be a new title for this task. May not be empty."
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "description": "Can optionally contain one or more tags for this task.",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "result": {
+                                        "description": "Can optionally contain one or more entries of step keys mapped to a result.These result values will be used as default values the temporary task results of a conversation.",
+                                        "allOf": [
+                                            {
+                                                "type": "object",
+                                                "discriminator": {
+                                                    "propertyName": "attributeGroup"
+                                                },
+                                                "properties": {
+                                                    "modified": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "source": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "SYSTEM",
+                                                            "USER"
+                                                        ]
+                                                    },
+                                                    "attributeGroup": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "data": {
+                                                        "type": "object",
+                                                        "readOnly": true,
+                                                        "additionalProperties": {
+                                                            "type": "object",
+                                                            "discriminator": {
+                                                                "propertyName": "attributeGroup"
+                                                            },
+                                                            "properties": {
+                                                                "modified": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "source": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "SYSTEM",
+                                                                        "USER"
+                                                                    ]
+                                                                },
+                                                                "attributeGroup": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "modified": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "readOnly": true
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "assignees": {
+                                        "type": "array",
+                                        "description": "Can optionally contain one or more participant identifiers which will be able to see this task.",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "submitted",
+                                            "accepted",
+                                            "rejected",
+                                            "removed"
+                                        ]
+                                    },
+                                    "steps": {
+                                        "type": "object",
+                                        "description": "Can optionally contain one or more overwrites for steps.",
+                                        "additionalProperties": {
+                                            "type": "object",
+                                            "properties": {
+                                                "readOnly": {
+                                                    "type": "boolean",
+                                                    "description": "Can be set to false or true to overwrite this attribute in an existing step.",
+                                                    "default": false
+                                                },
+                                                "decisionOptions": {
+                                                    "type": "array",
+                                                    "description": "Can optionally contain one or more decision options for steps of type DECISION.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "key": {
+                                                                "type": "string"
+                                                            },
+                                                            "title": {
+                                                                "type": "string"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "documentId": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "DOCUMENT",
+                                                                    "TEXT"
+                                                                ]
+                                                            },
+                                                            "moduleId": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Can optionally contain the description for this task."
+                                    }
+                                }
+                            }
+                        },
+                        "invitationLinks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "role": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "externalId": {
+                    "type": "string",
+                    "description": "external Id that can be used to reference the conversation and is returned in events"
+                },
+                "additionalMessages": {
+                    "type": "array",
+                    "description": "Messages that are added when createing a conversation or updating it.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "type"
+                        ],
+                        "discriminator": {
+                            "propertyName": "type"
+                        },
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb47"
+                            },
+                            "senderId": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb48"
+                            },
+                            "type": {
+                                "type": "string",
+                                "example": "CHAT",
+                                "enum": [
+                                    "DOCUMENT",
+                                    "CHAT",
+                                    "BONUS",
+                                    "USER_INFO",
+                                    "STATUS",
+                                    "META_INFORMATION",
+                                    "VOICE",
+                                    "RATING",
+                                    "REQUEST_DOCUMENTS",
+                                    "CONTACT_INFORMATION",
+                                    "CHANGE_IDENTIFIERS",
+                                    "REQUEST_ACTION",
+                                    "ACTION_RESULT",
+                                    "PARTICIPANT_STATE",
+                                    "INFO",
+                                    "PLACEHOLDER",
+                                    "NOTIFICATION",
+                                    "UNKNOWN"
+                                ]
+                            },
+                            "timestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T18:14:55.600+0000"
+                            },
+                            "message": {
+                                "type": "string",
+                                "example": "Hello there"
+                            },
+                            "onlyVisibleFor": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "description": "Request meta data for creating a conversation from a template or to add modules to a conversation."
+        }
+    }
+}

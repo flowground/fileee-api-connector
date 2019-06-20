@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "properties": {
+        "qrCode": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,997 @@
+{
+    "title": "fileee API",
+    "description": "The fileee API contains methods for accessing documents and other data in a fileee user account. API built on 2019-06-18T22:01:06Z.\n\n- Authorization follows the [OAuth 2.0](https://tools.ietf.org/html/rfc6749) standard, specifically the [Authorization Code Grant](https://tools.ietf.org/html/rfc6749#section-4.1) type.\n  - Most API calls require the access token in the `Authorization` HTTP request header as a string     of the form `Bearer 12345xy` (where 12345xy needs to be replaced with the actual access token).\n  - The _authorization endpoint_ is available at an URL of the form `https://my.workeee.de/oauth/authorize?response_type=code`     with the following additional request parameters: `client_id=` *your unique client ID* (REQUIRED),     `redirect_uri=` *the URI where the client should be redirected after authorization* (REQUIRED),     `scope=` *the space separated list of requested scopes* (OPTIONAL), `state=` *will be passed back to      the redirect endpoint unmodified* (RECOMMENDED).\n- All unique IDs are strings in the format of [BSON ObjectIds](https://docs.mongodb.com/manual/reference/bson-types/#objectid).",
+    "docsUrl": "",
+    "url": "https://api.workeee.de/v2/swagger.json",
+    "envVars": {
+        "OAUTH_CLIENT_ID": {
+            "description": "OAuth Client ID"
+        },
+        "OAUTH_CLIENT_SECRET": {
+            "description": "OAuth Client Secret"
+        }
+    },
+    "credentials": {
+        "fields": {
+            "server": {
+                "label": "Server",
+                "viewClass": "SelectView",
+                "model": [
+                    "https://api.workeee.de/v2",
+                    "--- Custom URL"
+                ],
+                "required": true
+            },
+            "otherServer": {
+                "label": "Custom Server URL",
+                "viewClass": "TextFieldView"
+            },
+            "oauth2": {
+                "label": "Normal fileee access token-based authorization.",
+                "viewClass": "OAuthFieldView"
+            }
+        },
+        "oauth2": {
+            "client_id": "{{OAUTH_CLIENT_ID}}",
+            "client_secret": "{{OAUTH_CLIENT_SECRET}}",
+            "auth_uri": "https://my.workeee.de/oauth/authorize",
+            "token_uri": "https://api.workeee.de/v2/authorization/token",
+            "scopes": [
+                "fileee:full"
+            ]
+        }
+    },
+    "triggers": {
+        "startFlow": {
+            "main": "./lib/triggers/startFlow.js",
+            "type": "polling",
+            "title": "Start Flow",
+            "fields": {}
+        }
+    },
+    "actions": {
+        "shortTimeToken": {
+            "main": "./lib/actions/shortTimeToken.js",
+            "title": "API to create a special short-time login token.",
+            "description": "This API can be called with a valid access token to generate a new specialized token (not following any standard OAuth process) that can be used for a short time to login to the same account on a different device.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/shortTimeToken.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "revoke": {
+            "main": "./lib/actions/revoke.js",
+            "title": "API to revoke and invalidate an OAuth token.",
+            "description": "Revoke or invalidate a token that is not needed any longer. Returns an empty response. After calling this method, the token (both access and refresh token, regardless of which one you passed) should not be used any longer.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/revoke.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "token": {
+            "main": "./lib/actions/token.js",
+            "title": "API to get and exchange OAuth tokens.",
+            "description": "Exchange an authorization code into access and refresh tokens or (depending on the grant type) get a new access token using the refresh token.\n- Depending on what you want to do, exactly one of `code` or `refresh_token` is required.\n- For the `authorization_code` grant type (i.e. exchanging a code into tokens), you need to specify the code in the `code` parameter, for the `refresh_token` grant type (i.e. refreshing an access token) you need to give the refresh token in the `refresh_token`.\n- The `password` grant type is only available for special clients",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/token.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getUserInfo": {
+            "main": "./lib/actions/getUserInfo.js",
+            "title": "Get own user-information",
+            "description": "Can be used to get information (like the participant ID) about the user associated with the supplied token (which needs to be valid).",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getUserInfo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAvailableConversationTemplates": {
+            "main": "./lib/actions/getAvailableConversationTemplates.js",
+            "title": "Lists all available conversation-templates for a company",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAvailableConversationTemplates.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createConversation": {
+            "main": "./lib/actions/createConversation.js",
+            "title": "Create a new conversation.",
+            "description": "Only very specific fields in the conversation can be initially set. The title is the only mandatory field you have to specify (and it must be between 2 and 200 characters in length).\n- The messages and participants fields can optionally be used to directly add initial messages and participants to a conversation.\n- A participants ID is either a company ID in the fileee system (for `USER` and `COMPANY`) or an email address (for `EXTERNAL` participants).\n- See [the add message documentation](#/Conversations/addMessageToConversation) and [the add participant documentation](#/Conversations/addParticipant) below for details on the messages and participant fields supported.\n- A conversation has a system of roles and permissions controlling what participants can do in the context of this conversation, e.g. if they're   allowed to share documents or to invite other users. Each participant has a role that controls the basic permissions they have. In addition, the conversation also has attributes to give everyone (or just specific participants) some additional permissions on top of those from their role. The following fields control the roles and permissions:\n  - `roles`: A map from participant ID to the role of that participant.\n  - `defaultAdditionalPermissions`: A set of permissions everyone gets in addition to those from their role.\n  - `additionalPermissions`: A map from participant ID to a set of permissions that this specific participant gets in addition to those from their role.\n- For more details about the permission system, see [this document](https://docs.google.com/document/d/1gdL7cIvvIBdlJoVQEF_EAw-XVe_RX60y_HXz2Vwcvwc/edit?usp=sharing)",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createFromTemplate": {
+            "main": "./lib/actions/createFromTemplate.js",
+            "title": "Create a new conversation from an existing template.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createFromTemplate.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createOrUpdateFromTemplate": {
+            "main": "./lib/actions/createOrUpdateFromTemplate.js",
+            "title": "Create a new conversation from an existing template.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createOrUpdateFromTemplate.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getSampleCreateFromTemplate": {
+            "main": "./lib/actions/getSampleCreateFromTemplate.js",
+            "title": "Produces sample of the request body for the call 'createFromTemplate'.",
+            "description": "The sample request body will contain all variable keys with sample values from all modules of the given template and a sample participant.If any module contains any tasks, there will also be a sample override for the task identifier, for the tags and for the result of each task.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getSampleCreateFromTemplate.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getInvitationInformation": {
+            "main": "./lib/actions/getInvitationInformation.js",
+            "title": "Get information about an invitation to a conversation.",
+            "description": "Get all the information available about an invitation to a conversation (e.g. what is the conversation about, who invited me, do we need password to accept?).",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getInvitationInformation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "acceptInvitation": {
+            "main": "./lib/actions/acceptInvitation.js",
+            "title": "Accepts the invitation to a conversation.",
+            "description": "Can be used to accept an invitation to a conversation, thereby importing the full conversation into the users fileee account.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/acceptInvitation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "rejectInvitation": {
+            "main": "./lib/actions/rejectInvitation.js",
+            "title": "Rejects the invitation to a conversation.",
+            "description": "Can be used to reject an invitation to a conversation, thereby also making the token unusable in the future and removing the invitation object from users fileee account.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/rejectInvitation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getConversation": {
+            "main": "./lib/actions/getConversation.js",
+            "title": "Get existing conversation.",
+            "description": "Get the current state of a conversation, including all messages and participants.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "deleteConversation": {
+            "main": "./lib/actions/deleteConversation.js",
+            "title": "Delete a conversation.",
+            "description": "Can be used to completely remove a conversation for all participants. Please note that you need the right permissions to perform this action.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/deleteConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getDocumentState": {
+            "main": "./lib/actions/getDocumentState.js",
+            "title": "Get the document state of a conversation.",
+            "description": "Get the current state of requested and shared documents in a conversation. The `requestedDocuments` contain all the shared documents that could be matched to requests with their identifiers and information e.g. about the request state. The `unassignedDocuments` contain the document IDs of all documents shared in this conversation that were not assigned to one of the requests.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getDocumentState.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "shareDocument": {
+            "main": "./lib/actions/shareDocument.js",
+            "title": "Share a document in a conversation",
+            "description": "Allows uploading and directly sharing a document in an existing conversation.\n\nPlease note that this API method uses a new and simplified document JSON model.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/shareDocument.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "leaveConversation": {
+            "main": "./lib/actions/leaveConversation.js",
+            "title": "Leave a conversation.",
+            "description": "Can be used to leave a conversation.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/leaveConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addMessageToConversation": {
+            "main": "./lib/actions/addMessageToConversation.js",
+            "title": "Add a message to a conversation.",
+            "description": "This method allows adding a message to an existing conversation.\n\n- The `conversationId` is required, the conversation with that ID has to exist beforehand and the user from the given access token has to be a participant in it.\n- Only set the `id` of the message if you are sure you can reliably generate valid ObjectIDs on the client side. If you leave it blank, an ID will be generated for you.\n- If the `timestamp` field is left blank, a timestamp will be generated on the server.\n- The `senderId` field refers to the ID of the participant. If you leave this blank, the user from the given access token is assumed to be the sender.\n- The `onlyVisibleFor` field can optionally contain a set of participant IDs if you want to limit visibility of the message to specific participants.\n- Some of the messages (e.g. `DOCUMENT`) actually trigger the respective action (e.g. sharing a document), so be careful to only add them if you actually want that to happen.\n\nThe following list describes the message types supported and their respective fields. All of this also applies to the messages that can be directly added using the create conversation API method.\n\n---\n`CHAT`: Normal textual chat message.\n```\n{\n  \"type\": \"CHAT\",\n  \"senderId\": \"5798835568c0e021ebc6eb48\",\n  \"message\": \"Hello there\"\n}\n```\n---\n`DOCUMENT`: Share an existing document in this conversation. The document has to be already uploaded to the sending users fileee account. The `identifier` can optionally be set to match this document to one requested by the `REQUEST_DOCUMENTS` message described below. The `remove` flag can optionally be set to `true` to remove an existing document with the given `documentId` from the conversation (if the `identifier` is also given, that identifier is removed from the shared document and the document is only completely removed if that was the only identifier). A document can only be removed by the user that originally shared it.\n```\n{\n  \"type\": \"DOCUMENT\",\n  \"documentId\": \"5798835568c0e021ebc6eb3e\",\n  \"identifier\": \"PAY_STATEMENT1\",\n  \"remove\": false\n}\n```\n---\n`STATUS`: Changes the conversation status (e.g. if it is OPEN new messages can be added, if its CLOSED no new messages can be added by the user).\n```\n{\n  \"type\": \"STATUS\",\n  \"senderId\": \"5798835568c0e021ebc6eb48\",\n  \"status\": \"CLOSED\"\n}\n```\n---\n`META_INFORMATION`: Can be used to exchange programmatic meta-information between all participants in a conversations in a generic map with string keys and string values. This message will never be directly shown to the user. The keys and values used are application-dependent and should be agreed upon for each specific scenario. For compatibility-reasons the keys should not contain dots.\n```\n{\n  \"type\": \"META_INFORMATION\",\n  \"information\": {\n    \"action\": \"NEW_APPLICATION\",\n    \"applicationType\": \"BUILDING_LOAN\",\n    \"applicationId\": \"FOO-BAR-23\"\n    }\n}\n```\n---\n`REQUEST_DOCUMENTS`: Requests specific documents to be shared in this conversations (or updates their state). Multiple documents can be requested or updated with a single message. All requested documents from all previous messages are accumulated (and newer requests with the same `identifier` replace older requests for the same document) over time, unless `clearPrevious` is specified (after which all previous requests not contained in the current message in this conversation are forgotten).\n\n- For the individual documents the `identifier` is a technical ID unique at least for this conversation,\n- the `status` can be used to designate a process-specific review state of a document (can be empty/not set for documents not yet submitted, `submitted` for documents that are submitted but not yet reviewed, `accepted` or `rejected` for reviewed documents),\n- the `type` can optionally be specified to narrow down the type of document requested,\n- the `tags` can optionally contain a set of user-visible textual tags used for grouping multiple requested documents logically,\n- the `name` is a short name shown in the list of requested documents and the `description` is a longer plaintext description shown to the user in detail views.\n\nTo update the status of a requested document, another request message has to be sent where the `status` field of the document with the right `identifier` is set to the new value.\n\n```\n{\n  \"type\": \"REQUEST_DOCUMENTS\",\n  \"message\": \"Please share the following documents with us\",\n  \"clearPrevious\": true,\n  \"documents\": [\n      { \"identifier\": \"PAY_STATEMENT1\", \"type\": \"payslip\", \"status\": \"submitted\", \"name\": \"Pay statement\",  \"description\": \"Your pay statement for 2015\", \"tags\": [\"Loan\", \"Brookhaven\"] },\n      { \"identifier\": \"CERT1\", \"status\": \"accepted\", \"name\": \"Insurance certificate\", \"description\": \"Your insurance certificate for the house\", \"tags\": [\"Loan\", \"Jonestown\"] },\n      { \"identifier\": \"CERT2\", \"name\": \"Other certificate\", \"description\": \"Your insurance certificate for the other house\", \"tags\": [\"Loan\", \"Brookhaven\"] }\n    ]\n}\n```\n---\n`REQUEST_ACTION`: Requests the user to provide information or perform other specific actions. The task described by this message consist of one or more parts or sub-tasks (the individual actions), each resulting in one specific piece of information. This can be used to get the user to e.g. fill out a form, submit an application, cash in a voucher or participate in another business process that requires the users interaction. The overall task and message can have the following properties:\n\n- The `identifier` is a technical ID unique at least for this conversation (newer requests with the same `identifier` replace older tasks),\n- the `title` is the title for the overall task,\n- the `description` is a longer plaintext description shown to the user when completing the task,\n- the `status` can optionally be set to update the status of an existing request with the given identifier,\n- the `tags` can optionally contain a set of user-visible textual tags used for grouping multiple requests logically,\n- the `thankYouMessage` can optionally be set to specify a message that is shown to the user directly after providing the requested information,\n- and finally the `actions` are a list of the actual individual steps or pieces of information required, they must not be empty.\n\nThe individual actions can have the following fields:\n\n- the `key` identifies this piece of information (e.g. \"shippingAddress\"). Required and should be unique among the different actions in one request,\n- the `actionType` should be one of `VALUE` (request to provide a value) or `DOCUMENT` (request to provide a document as part of a larger process), other types may be added in the future or supported for fileee-internal purposes,\n- the `template` is used to specify a template for a requested `VALUE` action, currently supported templates include `text`, `integer`, `double`, `boolean`, `date`, `date_time`, `amount`, `bank_account` and `address`,\n- the `templateOptions` can be used to set template-specific options like the maximum value or other constraints,\n- the `title` is a title for this specific action,\n- the `description` is a description for this specific action,\n- the `fieldDescription` is an optional field description that can be shown in or next to the actual field the user has to fill to provide the value,\n- the `optional` flag can be set to `true` if this action is not required and providing it can be skipped by the user.\n\nSome examples follow, but a more detailed explanation about using `REQUEST_ACTION` messages to add tasks for the user can be found [in this document](https://docs.google.com/document/d/1LzavoArlwTpbChWFB3QF9DgfnOmkVLGxPRUSS__s3RM/edit?usp=sharing).\n\nThis example shows one task where three pieces of information are requested, a document, a textual value and an amount (with a maximum value):\n```\n{\n  \"type\": \"REQUEST_ACTION\",\n  \"identifier\": \"request-payout\",\n  \"message\": \"Hi Jane, your line of credit has been granted. You can now request a payout.\",\n  \"title\": \"Request payout\",\n  \"description\": \"You can request a payout here\",\n  \"actions\": [\n    {\n      \"actionType\": \"DOCUMENT\",\n      \"title\": \"Utility bill\",\n      \"description\": \"The bill you want reimbursed\",\n      \"key\": \"billDocument\"\n    },\n    {\n      \"actionType\": \"VALUE\",\n      \"template\": \"text\",\n      \"title\": \"Usage\",\n      \"description\": \"For what do you need the money?\",\n      \"key\": \"usage\"\n    },\n    {\n      \"actionType\": \"VALUE\",\n      \"template\": \"amount\",\n      \"templateOptions\": {\n        \"max\": 5000\n      },\n      \"title\": \"Payout Amount\",\n      \"description\": \"How much money should be disbursed?\",\n      \"fieldDescription\": \"Amount\",\n      \"key\": \"payoutAmount\"\n    }\n  ]\n}\n```\nThis is an example how to completely remove an existing 'REQUEST_ACTION' task from the list of current tasks:\n```\n{\n  \"type\": \"REQUEST_ACTION\",\n  \"identifier\": \"request-payout\",\n  \"status\": \"removed\"\n}\n```\n\n---\n`ACTION_RESULT`: Describes the result returned in response to a `REQUEST_ACTION` message. Should never be added by external partners, but will be generated by the fileee apps and is document here for consistency.\n```\n{\n  \"type\": \"ACTION_RESULT\",\n  \"id\": \"58de7f90d57e3ba4125526e7\",\n  \"timestamp\": \"2017-03-31T16:10:56.921Z\",\n  \"identifier\": \"request-payout\",\n  \"stepResults\": {\n    \"type\": \"COMPOSED\",\n    \"data\": {\n      \"billDocument\": {\n        \"value\": \"57fa2f91d573fcb641352a24\",\n        \"type\": \"TEXT\"\n      },\n      \"usage\": {\n        \"value\": \"I need a reimbursement for this utility bill\",\n        \"type\": \"TEXT\"\n      },\n      \"payoutAmount\": {\n        \"type\": \"COMPOSED\",\n        \"data\": {\n          \"value\": {\n            \"value\": 23.5,\n            \"type\": \"DOUBLE\"\n          },\n          \"currency\": {\n            \"value\": \"EURO\",\n            \"type\": \"ENUMERATION\"\n          }\n        }\n      }\n    }\n  }\n}\n```\n---\n`CONTACT_INFORMATION`: Updates the contact information provided to the user. Only the last message of this type is taken into account for display. This gives the user some additional points of contact (e.g. phone numbers) to contact regarding this conversation. The `identifier` is a technical ID unique at least for this conversation.\n```\n{\n  \"type\": \"CONTACT_INFORMATION\",\n  \"contacts\": [\n      { \"identifier\": \"54321\", \"name\": \"fileee GmbH\", \"phoneNumber\": \"+4925132368309\", \"description\": \"Your fileee support contact\" }\n    ]\n}\n```\n---\n`CHANGE_IDENTIFIERS`: Can be used when one or more of the identifiers used to identify requested / shared documents needs to be changed. Both document requests and shared documents will use the provided mapping. Please note that instead of using this, we would strongly advise to use non-changing identifiers throughout one conversation / business process!\n```\n{\n  \"type\": \"CHANGE_IDENTIFIERS\",\n  \"changedIdentifiers\": {\n    \"OLD_IDENTIFIER1\": \"NEW_IDENTIFIER1\",\n    \"OLD_IDENTIFIER2\": \"NEW_IDENTIFIER2\"\n    }\n}\n```\n",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addMessageToConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getMessage": {
+            "main": "./lib/actions/getMessage.js",
+            "title": "Get a specific message from a conversation.",
+            "description": "Can be used if you just need one specific message and already know its ID from other means.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getMessage.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addMessageBundleToConversation": {
+            "main": "./lib/actions/addMessageBundleToConversation.js",
+            "title": "Adds a module to an existing conversation.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addMessageBundleToConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getSampleAddMessageBundleToConversation": {
+            "main": "./lib/actions/getSampleAddMessageBundleToConversation.js",
+            "title": "Produces sample of the request body for the call 'createFromTemplate'.",
+            "description": "The sample request body will contain all variable keys with sample values from this module.If the module contains any tasks, there will also be a sample override for the task identifier, for its tags and for the result of each task.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getSampleAddMessageBundleToConversation.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addParticipant": {
+            "main": "./lib/actions/addParticipant.js",
+            "title": "Add a participant to a conversation.",
+            "description": "Can be used to add/invite another participant to a conversation. Please note that adding other users will require special permissions.\n\nWhen adding `EXTERNAL` participants, the `id` needs to a valid email address. An invitation link to the conversation will be sent to that address. You can also set a {{phoneNumber}} for external participants, in which case the user is sent a password via SMS in addition to the link in the email, as a second security factor for accessing this conversation.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addParticipant.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "removeParticipant": {
+            "main": "./lib/actions/removeParticipant.js",
+            "title": "Remove a participant from a conversation.",
+            "description": "Can be used to remove one or more participants from a conversation. Please note that you need the right permissions to perform this action.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/removeParticipant.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "uploadDocument": {
+            "main": "./lib/actions/uploadDocument.js",
+            "title": "Upload a new document",
+            "description": "Uploading a document works through a `multipart/form-data` request with several parts. One of these parts contains the actual binary file to upload, the others can contain additional meta-data.\n- You can upload one document consisting of one PDF (with one or more pages) or multiple page images (i.e. JPG, PNG or GIF) at a time.\n  - If you are uploading multiple page images (e.g. scanned), please use the same file type for all images in one request.\n  - The order of the parts in the request determines the page order of the document.\n- After this API call returned, the document will be analyzed, thumbnails images will be generated and OCR will be done   (all done asynchronously in the background). Check the `status` field of the document meta-data and wait until   it is `CLASSIFIED` if you want to get the final version of the analyzed document.\n- All binary file parts will be used as described above, regardless of their parameter name. Nevertheless, we recommend naming the parameter for a single uploaded document `file` and for multiple page images `page0`, `page1` etc.\n- The `document` parameter uses the general document JSON that is also used for the response. You can use this to provide e.g.   an initial title or document type for the document or the ID of the fileeeBox to which this document should directly be added like this:  \n```  \n    {  \n      \"id\": \"5798835568c0e021ebc6eb3e\",  \n      \"documentTypeId\": \"bill\",  \n      \"documentInformation\": {  \n        \"title\": \"My awesome document\",  \n        \"fileeeBoxId\": \"5727934568c2f012eac3ca5f\"  \n      }  \n    }  \n```\n  - The currently supported values for documentTypeId are: `bill`, `receipt`, `ticket`, `payslip`, `certificate`, `information`, `letter`, `other`, `contract`, `ad`, `bankstatement`\n- The `meta` parameter may contain additional meta information for this upload that is not part of the actual document JSON.   You can use this to cause some specific actions to be done with the uploaded document. One example is directly sharing the  uploaded document in an existing conversation (optionally with an identifier described in the 'Add message' documentation) like this:  \n```\n    {  \n      \"conversationInformation\": {  \n        \"conversationId\": \"5798835568c0e021ebc6eb3f\",  \n        \"identifier\": \"PAY_STATEMENT1\"  \n      }  \n    }  \n```\n- Please note that the 'Try it out'-feature of the docs website will not work for this API call because of limitations in   swagger. You have to use other tools like Postman or your own code to try it.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/uploadDocument.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getDocument": {
+            "main": "./lib/actions/getDocument.js",
+            "title": "Get metadata for a document.",
+            "description": "The meta-data contains information about the type of document and other attributes and properties either found through our automatic analysis or set by the user.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getDocument.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "download": {
+            "main": "./lib/actions/download.js",
+            "title": "Download a document as a PDF.",
+            "description": "Always produces a PDF, regardless of the original document format.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/download.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "connectService": {
+            "main": "./lib/actions/connectService.js",
+            "title": "Connect a service to a customer with given identifier.",
+            "description": "Can optionally be connected with verification, in this case the service will not appear in the users account until he or she verified him- or herself.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/connectService.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "updateService": {
+            "main": "./lib/actions/updateService.js",
+            "title": "Update a service for a customer with given identifier.",
+            "description": "Verification can e.g be removed by updating the verification type to NONE.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/updateService.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "disconnect": {
+            "main": "./lib/actions/disconnect.js",
+            "title": "Disconnect a service from a customer with given identifier.",
+            "description": "If a disconnect template was configured when connecting this service, the user will receive a conversation instance from that template.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/disconnect.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getBoxList": {
+            "main": "./lib/actions/getBoxList.js",
+            "title": "getBoxList",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getBoxList.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createBox": {
+            "main": "./lib/actions/createBox.js",
+            "title": "createBox",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "checkORCode": {
+            "main": "./lib/actions/checkORCode.js",
+            "title": "checkORCode",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/checkORCode.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "deleteBox": {
+            "main": "./lib/actions/deleteBox.js",
+            "title": "deleteBox",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/deleteBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "activateBox": {
+            "main": "./lib/actions/activateBox.js",
+            "title": "Activate a fileeeBox for an user.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/activateBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getUserInfoPublic": {
+            "main": "./lib/actions/getUserInfoPublic.js",
+            "title": "Get the user information for a public accessible fileeeBox.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getUserInfoPublic.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getBox": {
+            "main": "./lib/actions/getBox.js",
+            "title": "getBox",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addDocumentToBox": {
+            "main": "./lib/actions/addDocumentToBox.js",
+            "title": "addDocumentToBox",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addDocumentToBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "removedDocumentFromBox": {
+            "main": "./lib/actions/removedDocumentFromBox.js",
+            "title": "removedDocumentFromBox",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/removedDocumentFromBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAvailableMessageBundles": {
+            "main": "./lib/actions/getAvailableMessageBundles.js",
+            "title": "Lists all available modules for a company",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAvailableMessageBundles.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getRequestActionMessageAsResult": {
+            "main": "./lib/actions/getRequestActionMessageAsResult.js",
+            "title": "Gets a sample ActionResultMessage for a RequestActionMessage.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getRequestActionMessageAsResult.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAll": {
+            "main": "./lib/actions/getAll.js",
+            "title": "Get all persons.",
+            "description": "Either all or a limited amount of persons is returned.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAll.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createPerson": {
+            "main": "./lib/actions/createPerson.js",
+            "title": "Create a new person.",
+            "description": "The person from the request body is created. Addresses, contact data, logo and branding information are stored, if existent.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createPerson.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "checkLogo": {
+            "main": "./lib/actions/checkLogo.js",
+            "title": "Checks if the logo can be processed.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/checkLogo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getPerson": {
+            "main": "./lib/actions/getPerson.js",
+            "title": "Get a person with specified identifier.",
+            "description": "The returned person object includes existing contact data and addresses as well as branding information.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getPerson.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "updatePerson": {
+            "main": "./lib/actions/updatePerson.js",
+            "title": "Update an existing person with specified identifier.",
+            "description": "If the person with the given ID exists, will be updated with person values from request body.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/updatePerson.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "delete": {
+            "main": "./lib/actions/delete.js",
+            "title": "Delete the person with given identifier.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/delete.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getLogo": {
+            "main": "./lib/actions/getLogo.js",
+            "title": "Get the logo of the person with specified identifier.",
+            "description": "Returns the image data in format PNG.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getLogo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createLogo": {
+            "main": "./lib/actions/createLogo.js",
+            "title": "Create a new logo for a Person with given identifier.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createLogo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createPostBox": {
+            "main": "./lib/actions/createPostBox.js",
+            "title": "Create a PostBox for a user.",
+            "description": "Creates a PostBox into which documents can be uploaded for a user. The user does not have to have an existing fileee account.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createPostBox.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getStatus": {
+            "main": "./lib/actions/getStatus.js",
+            "title": "Get the status of a PostBox.",
+            "description": "",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getStatus.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "sendDocument": {
+            "main": "./lib/actions/sendDocument.js",
+            "title": "Send a document to a user",
+            "description": "Allows companies to send documents via **fileee** to the **postbox** of a user. This virtual postbox can take several different forms, e.g. either one folder or _shared space_ that receives all the documents from one company for a user or several individual _conversations_ for specific documents. The user does _not_ have to have an existing fileee account, they will be notified via email when you first want to share a document with them.\n\n- Uploading a document works through a **`multipart/form-data`** request with several parts. One of these parts contains the actual binary file to upload, another contains required information about the target user, the document and how it should be presented to the user.\n- The `file` form-part should contain the document file to send to the user. We strongly recommend **PDF** as a format, although some image types are also supported.\n- The `request` form-part must contain all the required information to deliver the document to a target user and can contain additionalmeta-data properties of the document, like a title or issue date that will be shown to the user. The content-type must be `application/json`.\n- **Please note:** The 'Try it out'-feature of the docs website will not work for this API call because of limitations in   swagger. You have to use other tools like Postman or your own code to try it.\n\n---\nThe `request` form-part describes the details of the request:\n\n- The `externalId` can optionally be set to an arbitrary value that helps you identify the request in your own systems, it is not used by fileee.\n- The `recipient` describes which user should receive this document. This field is required.\n- The `configuration` describes how the document should be delivered and presented to the user. This field is required.\n- The `document` describes the document-related meta-data, most of which is directly shown to the user in fileee. This field (but not all parts of it) is required.\n\nA very minimal request could look like this:\n\n```\n{\n  \"recipient\": {\n    \"email\": \"some.user@example.com\",\n  },\n  \"configuration\": {\n    \"type\": \"TEMPLATE\",\n    \"templateName\": \"our-template\"\n  },\n  \"document\": {\n    \"title\": \"Our awesome document\"\n  }\n}\n```\n\n---\nThe `recipient` field in the request identifies the target user that should receive the document. The minimum we need here is an email address, but a name should be given if possible to personalize the conversation. You can optionally also specify a phone number which can be used when sending out security codes to access protected content.\n\n```\n{\n  \"email\": \"some.user@example.com\",\n  \"name\": \"Some User\",\n  \"phoneNumber\": \"+49123456789\",\n}\n```\n\n---\nThe `configuration` field in the request controls how the new document is delivered and presented to the user. The most important parameter is the **type**, which also controls which other fields in the configuration need to be set. For the `TEMPLATE` type, you just need to specify the name of a template which in turn defines the attributes, messages etc. of the conversation or shared space for the document:\n\n```\n{\n  \"type\": \"TEMPLATE\",\n  \"templateName\": \"awesome-invoice-template23\"\n}\n```\nFor the `CUSTOM` type, you can specify all the details of the created conversation yourself:\n\n```\n{\n  \"type\": \"CUSTOM\",\n  \"conversation\": {\n    \"kind\": \"new_loan_application\",\n    \"title\": \"Your new loan application was received\",\n    \"companyId\": \"5798835568c0e021ebc6eb44\",\n    // ...\n  }\n}\n```\nYou should always only set the parameters relevant for the specific type, so e.g. only set the `templateName` if the `type` is `TEMPLATE` and only set the `conversation` when the `type` is `CUSTOM`.\n\n---\nThe `document` field in the request should contain attributes of the document that is created. This controls the title of the document that is shown to the user in fileee, but can also contain other attributes like an issue date or the sender of the document:\n\n```\n{\n  \"title\": \"Your invoice for August 2017\",\n  \"issueDate\": \"2017-08-23\",\n  \"sender\": {\n    \"contactId\": \"50ac222b0cf2f924c9ccb919\"\n  },\n  \"receiver\": {\n    \"name\": \"Awesome Fruit GmbH\",\n    \"street\": \"Superstr. 23\",\n    \"postalCode\": \"48143\",\n    \"city\": \"Munster\"\n  }\n}\n```\nA contact (sender or receiver) should _either_ contain a `contactId` _or_ the postal address fields, never both. If the receiver is not specified, we assume the document to be addressed to the fileee user in question.\n",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/sendDocument.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "activate": {
+            "main": "./lib/actions/activate.js",
+            "title": "Activates the postbox for a user",
+            "description": "This can be used to activate a postbox for a user. \nOne reason can be that he handed in the required information personally so that he is no longer required to finish the task. \n Limitations here are: \n- The invited user must be registered.\n- Documents send to the postbox before the activation are deleted and WON'T be available to the user",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/activate.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "connectThinkowl": {
+            "main": "./lib/actions/connectThinkowl.js",
+            "title": "Connect ThinkOwl Desk",
+            "description": "Connect ThinkOwl Desk with fileee account by providing credentials for accessing desk",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/connectThinkowl.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getParticipant": {
+            "main": "./lib/actions/getParticipant.js",
+            "title": "Deprecated: Get own user-information",
+            "description": "**(Deprecated, see `/authorization/user-info` instead)** Can be used to get own participantId",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getParticipant.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "resendActivationMail": {
+            "main": "./lib/actions/resendActivationMail.js",
+            "title": "resendActivationMail",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/resendActivationMail.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "resendConversationSms": {
+            "main": "./lib/actions/resendConversationSms.js",
+            "title": "resendConversationSms",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/resendConversationSms.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "description": "The actual binary data of the image to use as logo.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                }
+            },
+            "required": [
+                "file"
+            ]
+        }
+    }
+}
