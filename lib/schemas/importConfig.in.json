@@ -1,0 +1,893 @@
+{
+    "type": "object",
+    "properties": {
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb3e"
+                            },
+                            "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "deleted": {
+                                "type": "boolean",
+                                "example": false,
+                                "default": false
+                            },
+                            "version": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "localVersion": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "messages": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "discriminator": {
+                                        "propertyName": "type"
+                                    },
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "5798835568c0e021ebc6eb47"
+                                        },
+                                        "senderId": {
+                                            "type": "string",
+                                            "example": "5798835568c0e021ebc6eb48"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "CHAT",
+                                            "enum": [
+                                                "DOCUMENT",
+                                                "CHAT",
+                                                "BONUS",
+                                                "USER_INFO",
+                                                "STATUS",
+                                                "META_INFORMATION",
+                                                "VOICE",
+                                                "RATING",
+                                                "REQUEST_DOCUMENTS",
+                                                "CONTACT_INFORMATION",
+                                                "CHANGE_IDENTIFIERS",
+                                                "REQUEST_ACTION",
+                                                "ACTION_RESULT",
+                                                "PARTICIPANT_STATE",
+                                                "INFO",
+                                                "PLACEHOLDER",
+                                                "NOTIFICATION",
+                                                "UNKNOWN"
+                                            ]
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2016-01-28T18:14:55.600+0000"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hello there"
+                                        },
+                                        "onlyVisibleFor": {
+                                            "type": "array",
+                                            "uniqueItems": true,
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "moduleId": {
+                                "type": "string"
+                            },
+                            "usages": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "locked": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "tags": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "conversationTemplates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb3e"
+                            },
+                            "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "deleted": {
+                                "type": "boolean",
+                                "example": false,
+                                "default": false
+                            },
+                            "version": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "localVersion": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "conversationSettings": {
+                                "type": "object",
+                                "required": [
+                                    "kind",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "externalId": {
+                                        "type": "string",
+                                        "description": "external Id that can be used to reference the conversation and is returned in events"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "B2C",
+                                        "enum": [
+                                            "HERO",
+                                            "SUPPORT",
+                                            "B2B",
+                                            "B2C",
+                                            "C2C",
+                                            "UNKNOWN"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "type": "string",
+                                        "example": "new_loan_application"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My Conversation",
+                                        "minLength": 2,
+                                        "maxLength": 200
+                                    },
+                                    "companyId": {
+                                        "type": "string",
+                                        "example": "5798835568c0e021ebc6eb44",
+                                        "description": "ID of an associated company used for branding, colours etc."
+                                    },
+                                    "ownerId": {
+                                        "type": "string",
+                                        "example": "5798835568c0e021ebc6eb44"
+                                    },
+                                    "messages": {
+                                        "type": "array",
+                                        "description": "List of initial messages for the conversation",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "type"
+                                            ],
+                                            "discriminator": {
+                                                "propertyName": "type"
+                                            },
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "5798835568c0e021ebc6eb47"
+                                                },
+                                                "senderId": {
+                                                    "type": "string",
+                                                    "example": "5798835568c0e021ebc6eb48"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "CHAT",
+                                                    "enum": [
+                                                        "DOCUMENT",
+                                                        "CHAT",
+                                                        "BONUS",
+                                                        "USER_INFO",
+                                                        "STATUS",
+                                                        "META_INFORMATION",
+                                                        "VOICE",
+                                                        "RATING",
+                                                        "REQUEST_DOCUMENTS",
+                                                        "CONTACT_INFORMATION",
+                                                        "CHANGE_IDENTIFIERS",
+                                                        "REQUEST_ACTION",
+                                                        "ACTION_RESULT",
+                                                        "PARTICIPANT_STATE",
+                                                        "INFO",
+                                                        "PLACEHOLDER",
+                                                        "NOTIFICATION",
+                                                        "UNKNOWN"
+                                                    ]
+                                                },
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2016-01-28T18:14:55.600+0000"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Hello there"
+                                                },
+                                                "onlyVisibleFor": {
+                                                    "type": "array",
+                                                    "uniqueItems": true,
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "participants": {
+                                        "type": "array",
+                                        "description": "List of initial participants for the conversation",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "id",
+                                                "name",
+                                                "type"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "5798835568c0e021ebc6eb48"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Tobias Meier"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "USER",
+                                                    "enum": [
+                                                        "USER",
+                                                        "COMPANY",
+                                                        "EXTERNAL",
+                                                        "CUSTOMER",
+                                                        "OTHER"
+                                                    ]
+                                                },
+                                                "kind": {
+                                                    "type": "string",
+                                                    "example": "customer",
+                                                    "description": "Variable to distinguish between different kinds of participants, defined by company"
+                                                },
+                                                "phoneNumber": {
+                                                    "type": "string",
+                                                    "example": "+491738231242",
+                                                    "description": "Optional telephone number for external participants."
+                                                },
+                                                "joined": {
+                                                    "type": "boolean",
+                                                    "description": "True if the participant has accepted any terms and/or the invitation to join this conversation.",
+                                                    "readOnly": true,
+                                                    "default": false
+                                                },
+                                                "externalId": {
+                                                    "type": "string",
+                                                    "example": "foo.bar@example.com",
+                                                    "description": "The original email address of a participant that was converted from type EXTERNAL to USER",
+                                                    "readOnly": true
+                                                },
+                                                "attributes": {
+                                                    "type": "object",
+                                                    "description": "A map of custom attributes or properties that are associated with this participant.",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "hiddenTypesForNewUsers": {
+                                        "type": "array",
+                                        "example": "CHAT",
+                                        "uniqueItems": true,
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "DOCUMENT",
+                                                "CHAT",
+                                                "BONUS",
+                                                "USER_INFO",
+                                                "STATUS",
+                                                "META_INFORMATION",
+                                                "VOICE",
+                                                "RATING",
+                                                "REQUEST_DOCUMENTS",
+                                                "CONTACT_INFORMATION",
+                                                "CHANGE_IDENTIFIERS",
+                                                "REQUEST_ACTION",
+                                                "ACTION_RESULT",
+                                                "PARTICIPANT_STATE",
+                                                "INFO",
+                                                "PLACEHOLDER",
+                                                "NOTIFICATION",
+                                                "UNKNOWN"
+                                            ]
+                                        }
+                                    },
+                                    "presentation": {
+                                        "type": "string",
+                                        "description": "Should the conversation be presented as a conversation (message-centric) or a shared space (document-centric)?",
+                                        "enum": [
+                                            "CONVERSATION",
+                                            "FILEEE_SPACE"
+                                        ]
+                                    },
+                                    "roles": {
+                                        "type": "object",
+                                        "description": "A map from participant ID to the role of that participant.",
+                                        "additionalProperties": {
+                                            "type": "string",
+                                            "description": "The role of a participant in a fileee conversation/space",
+                                            "enum": [
+                                                "VIEWER",
+                                                "EDITOR",
+                                                "ADMIN"
+                                            ]
+                                        }
+                                    },
+                                    "defaultRole": {
+                                        "type": "string",
+                                        "description": "The default role when adding new participants to this conversation.",
+                                        "enum": [
+                                            "VIEWER",
+                                            "EDITOR",
+                                            "ADMIN"
+                                        ]
+                                    },
+                                    "defaultAdditionalPermissions": {
+                                        "type": "array",
+                                        "description": "A set of permissions everyone gets in addition to those from their role.",
+                                        "uniqueItems": true,
+                                        "items": {
+                                            "type": "string",
+                                            "description": "A permission in a fileee conversation/space",
+                                            "enum": [
+                                                "Space.DELETE",
+                                                "Space.LEAVE",
+                                                "Space.UPDATE",
+                                                "Space.CREATE_PUBLIC_LINK",
+                                                "Space.INVITE_USERS",
+                                                "Space.REMOVE_USERS",
+                                                "Space.EDIT_PERMISSIONS",
+                                                "Space.NO_PERMISSION_REQUIRED",
+                                                "Messages.UPDATE_TASK_STATE",
+                                                "Messages.SUBMIT_TASK_RESULT",
+                                                "Messages.AWARD_BONUS_POINTS",
+                                                "Messages.CHAT",
+                                                "Documents.ADD",
+                                                "Documents.EDIT",
+                                                "Documents.REMOVE_OWN",
+                                                "Documents.REMOVE_OTHER",
+                                                "Documents.COMMENT",
+                                                "Documents.COPY_TO_OWN_ACCOUNT",
+                                                "Documents.SEND_TO_OTHER",
+                                                "Documents.DOWNLOAD"
+                                            ]
+                                        }
+                                    },
+                                    "additionalPermissions": {
+                                        "type": "object",
+                                        "description": "A map from participant ID to a set of permissions that this specific participant gets in addition to those from their role.",
+                                        "additionalProperties": {
+                                            "type": "string",
+                                            "description": "A permission in a fileee conversation/space",
+                                            "enum": [
+                                                "Space.DELETE",
+                                                "Space.LEAVE",
+                                                "Space.UPDATE",
+                                                "Space.CREATE_PUBLIC_LINK",
+                                                "Space.INVITE_USERS",
+                                                "Space.REMOVE_USERS",
+                                                "Space.EDIT_PERMISSIONS",
+                                                "Space.NO_PERMISSION_REQUIRED",
+                                                "Messages.UPDATE_TASK_STATE",
+                                                "Messages.SUBMIT_TASK_RESULT",
+                                                "Messages.AWARD_BONUS_POINTS",
+                                                "Messages.CHAT",
+                                                "Documents.ADD",
+                                                "Documents.EDIT",
+                                                "Documents.REMOVE_OWN",
+                                                "Documents.REMOVE_OTHER",
+                                                "Documents.COMMENT",
+                                                "Documents.COPY_TO_OWN_ACCOUNT",
+                                                "Documents.SEND_TO_OTHER",
+                                                "Documents.DOWNLOAD"
+                                            ]
+                                        }
+                                    },
+                                    "allowedSecondAuthFactors": {
+                                        "type": "array",
+                                        "description": "A list of all allowed second authentication factors for this conversation.",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "SMS_TAN",
+                                                "NONE"
+                                            ]
+                                        }
+                                    },
+                                    "invitationIsToS": {
+                                        "type": "boolean",
+                                        "description": "Should the invitation contain Terms of Service to be accepted, should be set to true.",
+                                        "default": false
+                                    },
+                                    "invitationText": {
+                                        "type": "string",
+                                        "description": "Custom invitation text to be displayed. May be used for Terms of Service."
+                                    },
+                                    "forceEmailOnNewParticipant": {
+                                        "type": "boolean",
+                                        "description": "If true, emails will always be send when participants get added to a conversation (without being invited).",
+                                        "default": false
+                                    },
+                                    "invitationLinks": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "role": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "expirationInformation": {
+                                        "description": "Expiration settings for invitations / conversations.",
+                                        "type": "object",
+                                        "required": [
+                                            "validForHours"
+                                        ],
+                                        "properties": {
+                                            "expirationText": {
+                                                "type": "string",
+                                                "description": "Custom text which will be shown to the user, if a invitation in his/her account has expired."
+                                            },
+                                            "validUntilTaskFinished": {
+                                                "type": "string",
+                                                "description": "Identifier of a task. Conversation will be valid until this task is finished."
+                                            },
+                                            "validUntil": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Date until which the conversation is valid."
+                                            },
+                                            "validForHours": {
+                                                "type": "integer",
+                                                "format": "int32",
+                                                "example": 48,
+                                                "description": "Amount of hours an invitation for a conversation should be valid."
+                                            }
+                                        }
+                                    },
+                                    "notifiers": {
+                                        "type": "array",
+                                        "description": "List of notifiers which can trigger an action at a specific point in time for this conversation.",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "hoursAfterCreation": {
+                                                    "type": "integer",
+                                                    "format": "int32",
+                                                    "description": "Defines how many hours after a conversation was created, the notifier should be triggered."
+                                                },
+                                                "moduleId": {
+                                                    "type": "string",
+                                                    "description": "Module ID of the module which will be added to the conversation, once the notifier is triggered."
+                                                },
+                                                "taskIdentifiers": {
+                                                    "type": "array",
+                                                    "description": "List of task identifiers, which need to be finished to disable the notifier.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "temporaryTaskResults": {
+                                        "description": "Temporary task results, which can be taken to store prefilled or default results of tasks.",
+                                        "allOf": [
+                                            {
+                                                "type": "object",
+                                                "discriminator": {
+                                                    "propertyName": "attributeGroup"
+                                                },
+                                                "properties": {
+                                                    "modified": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "source": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "SYSTEM",
+                                                            "USER"
+                                                        ]
+                                                    },
+                                                    "attributeGroup": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "data": {
+                                                        "type": "object",
+                                                        "readOnly": true,
+                                                        "additionalProperties": {
+                                                            "type": "object",
+                                                            "discriminator": {
+                                                                "propertyName": "attributeGroup"
+                                                            },
+                                                            "properties": {
+                                                                "modified": {
+                                                                    "type": "string",
+                                                                    "format": "date-time"
+                                                                },
+                                                                "source": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "SYSTEM",
+                                                                        "USER"
+                                                                    ]
+                                                                },
+                                                                "attributeGroup": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "modified": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "readOnly": true
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "logoId": {
+                                        "type": "string"
+                                    },
+                                    "creatorNotAdmin": {
+                                        "type": "boolean",
+                                        "description": "If true, the creator of the conversation will not be admin in the conversation. Instead the first added user will have the admin role.",
+                                        "default": false
+                                    },
+                                    "businessProcessKey": {
+                                        "type": "string"
+                                    },
+                                    "readToIndex": {
+                                        "type": "integer",
+                                        "format": "int32"
+                                    }
+                                },
+                                "description": "Request to create a new conversation",
+                                "example": {
+                                    "kind": "new_loan_application",
+                                    "title": "Your new loan application",
+                                    "companyId": "5798835568c0e021ebc6eb44",
+                                    "messages": [
+                                        {
+                                            "senderId": "5798835568c0e021ebc6eb44",
+                                            "type": "CHAT",
+                                            "timestamp": "2020-06-02T08:07:41.016Z",
+                                            "message": "Hello customer!",
+                                            "processed": false
+                                        }
+                                    ],
+                                    "participants": [
+                                        {
+                                            "id": "5798835568c0e021ebc6eb44",
+                                            "name": "ExampleCorp GmbH",
+                                            "type": "COMPANY",
+                                            "joined": true
+                                        },
+                                        {
+                                            "id": "5798835568c0e021ebc6eb47",
+                                            "name": "Jane User",
+                                            "type": "USER",
+                                            "joined": true
+                                        }
+                                    ],
+                                    "presentation": "CONVERSATION",
+                                    "roles": {
+                                        "5798835568c0e021ebc6eb44": "ADMIN",
+                                        "5798835568c0e021ebc6eb47": "VIEWER"
+                                    },
+                                    "defaultAdditionalPermissions": [
+                                        "Messages.CHAT"
+                                    ],
+                                    "additionalPermissions": {
+                                        "5798835568c0e021ebc6eb44": [
+                                            "Messages.UPDATE_TASK_STATE"
+                                        ]
+                                    },
+                                    "allowedSecondAuthFactors": [
+                                        "SMS_TAN"
+                                    ],
+                                    "invitationIsToS": false,
+                                    "forceEmailOnNewParticipant": false,
+                                    "expirationInformation": {
+                                        "expirationText": "Sorry this invitation has expired. You can not access it anymore.",
+                                        "validUntilTaskFinished": "task-ident",
+                                        "validForHours": 2
+                                    },
+                                    "notifiers": [
+                                        {
+                                            "hoursAfterCreation": 1,
+                                            "moduleId": "some-module-id",
+                                            "taskIdentifiers": [
+                                                "task-ident"
+                                            ]
+                                        }
+                                    ],
+                                    "creatorNotAdmin": false,
+                                    "readToIndex": -1
+                                }
+                            },
+                            "initialBundles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "uniqueKind": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "templateId": {
+                                "type": "string"
+                            },
+                            "locked": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "tags": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "emailTemplates": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "defaultLanguage",
+                            "emailTemplates",
+                            "id",
+                            "templateId"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb3e"
+                            },
+                            "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "deleted": {
+                                "type": "boolean",
+                                "example": false,
+                                "default": false
+                            },
+                            "version": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "localVersion": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "templateId": {
+                                "type": "string"
+                            },
+                            "defaultLanguage": {
+                                "type": "string",
+                                "enum": [
+                                    "GERMAN",
+                                    "ENGLISH",
+                                    "JAPANESE",
+                                    "SWEDISH"
+                                ]
+                            },
+                            "emailId": {
+                                "type": "string"
+                            },
+                            "emailTemplates": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                        "source": {
+                                            "type": "string"
+                                        },
+                                        "html": {
+                                            "type": "string"
+                                        },
+                                        "subject": {
+                                            "type": "string"
+                                        },
+                                        "sourceType": {
+                                            "type": "string",
+                                            "enum": [
+                                                "HTML",
+                                                "MJML"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "publicTemplate": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "readOnly": {
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "tags": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "externalUrlConfigurations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "authorizationType",
+                            "id",
+                            "type",
+                            "url"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "5798835568c0e021ebc6eb3e"
+                            },
+                            "created": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "modified": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2016-01-28T17:37:11.482+0000",
+                                "readOnly": true
+                            },
+                            "deleted": {
+                                "type": "boolean",
+                                "example": false,
+                                "default": false
+                            },
+                            "version": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "localVersion": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "EXTERNAL_DROPDOWN_SOURCE"
+                                ]
+                            },
+                            "url": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 2048
+                            },
+                            "authorizationType": {
+                                "type": "string",
+                                "enum": [
+                                    "HEADER",
+                                    "NONE"
+                                ]
+                            },
+                            "authorizationData": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "originalExportUser": {
+                    "type": "string"
+                },
+                "companySetting": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

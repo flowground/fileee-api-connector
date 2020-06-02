@@ -42,6 +42,35 @@
                 "templateId": {
                     "type": "string",
                     "example": "fooBarTemplate"
+                },
+                "verificationOptions": {
+                    "type": "object",
+                    "required": [
+                        "type"
+                    ],
+                    "properties": {
+                        "tan": {
+                            "type": "string",
+                            "description": "The TAN the user has to enter to verify himself or herself."
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "The type of verification (NONE or TAN)",
+                            "enum": [
+                                "SMS",
+                                "PREDEFINED",
+                                "NONE"
+                            ]
+                        },
+                        "phoneNumber": {
+                            "type": "string",
+                            "example": "+49123456789"
+                        },
+                        "valid": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
                 }
             }
         }

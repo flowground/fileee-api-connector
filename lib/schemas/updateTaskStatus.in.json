@@ -1,0 +1,29 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "taskIdentifier": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        }
+    }
+}

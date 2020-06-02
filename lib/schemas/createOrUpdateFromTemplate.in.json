@@ -202,6 +202,80 @@
                                                     "description": "Can be set to false or true to overwrite this attribute in an existing step.",
                                                     "default": false
                                                 },
+                                                "fields": {
+                                                    "description": "Type which can contain overwrites for fields in the response type of the step.",
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "displayHints": {
+                                                            "type": "array",
+                                                            "uniqueItems": true,
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "valueTemplate": {
+                                                            "type": "string"
+                                                        },
+                                                        "fieldDescription": {
+                                                            "type": "string"
+                                                        },
+                                                        "helpText": {
+                                                            "type": "string"
+                                                        },
+                                                        "key": {
+                                                            "type": "string"
+                                                        },
+                                                        "readOnly": {
+                                                            "type": "boolean",
+                                                            "default": false
+                                                        },
+                                                        "constraints": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "constraintType": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "ASSERT_TRUE",
+                                                                            "ASSERT_FALSE",
+                                                                            "MAX",
+                                                                            "MIN",
+                                                                            "NO_NULL_ELEMENTS",
+                                                                            "NOT_NULL",
+                                                                            "ONLY_UNIQUE_OBJECTS",
+                                                                            "SIZE",
+                                                                            "IBAN",
+                                                                            "FORBIDDEN_WEEKDAYS",
+                                                                            "RELATIVE_DATE_MIN",
+                                                                            "RELATIVE_DATE_MAX",
+                                                                            "PATTERN",
+                                                                            "VALID_VALUES",
+                                                                            "UNKNOWN"
+                                                                        ]
+                                                                    },
+                                                                    "messageTemplate": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "groups": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "object"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "serverOnly": {
+                                                            "type": "boolean",
+                                                            "default": false
+                                                        },
+                                                        "dispensable": {
+                                                            "type": "boolean",
+                                                            "default": false
+                                                        }
+                                                    }
+                                                },
                                                 "decisionOptions": {
                                                     "type": "array",
                                                     "description": "Can optionally contain one or more decision options for steps of type DECISION.",
@@ -239,6 +313,11 @@
                                     "description": {
                                         "type": "string",
                                         "description": "Can optionally contain the description for this task."
+                                    },
+                                    "priority": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "description": "Can optionally contain a number defining the priority for this task."
                                     }
                                 }
                             }
@@ -258,11 +337,11 @@
                 },
                 "externalId": {
                     "type": "string",
-                    "description": "external Id that can be used to reference the conversation and is returned in events"
+                    "description": "External ID which can be used to reference the conversation, for example to update it."
                 },
                 "additionalMessages": {
                     "type": "array",
-                    "description": "Messages that are added when createing a conversation or updating it.",
+                    "description": "Messages that are added when creating a conversation or updating it.",
                     "items": {
                         "type": "object",
                         "required": [

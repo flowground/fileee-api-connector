@@ -12,12 +12,18 @@
         "requestBody": {
             "type": "object",
             "properties": {
+                "variable": {
+                    "description": "The binary file to upload.",
+                    "type": "string",
+                    "format": "binary"
+                },
                 "meta": {
                     "description": "The content of this form parameter should follow the format described for the `documentJson` parameter described below (this is a workaround for a limitation of the Swagger format).",
                     "type": "string"
                 }
             },
             "required": [
+                "variable",
                 "meta"
             ]
         }

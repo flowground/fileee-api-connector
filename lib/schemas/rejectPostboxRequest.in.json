@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "requestId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "reason": {
+                    "type": "string"
+                },
+                "moduleId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

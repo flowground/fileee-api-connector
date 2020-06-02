@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "properties": {
+        "dataSetUuid": {
+            "required": true,
+            "type": "string"
+        },
+        "labelUuid": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

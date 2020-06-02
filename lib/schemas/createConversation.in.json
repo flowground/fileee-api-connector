@@ -247,6 +247,7 @@
                             "Space.EDIT_PERMISSIONS",
                             "Space.NO_PERMISSION_REQUIRED",
                             "Messages.UPDATE_TASK_STATE",
+                            "Messages.SUBMIT_TASK_RESULT",
                             "Messages.AWARD_BONUS_POINTS",
                             "Messages.CHAT",
                             "Documents.ADD",
@@ -276,6 +277,7 @@
                             "Space.EDIT_PERMISSIONS",
                             "Space.NO_PERMISSION_REQUIRED",
                             "Messages.UPDATE_TASK_STATE",
+                            "Messages.SUBMIT_TASK_RESULT",
                             "Messages.AWARD_BONUS_POINTS",
                             "Messages.CHAT",
                             "Documents.ADD",
@@ -358,48 +360,22 @@
                     "description": "List of notifiers which can trigger an action at a specific point in time for this conversation.",
                     "items": {
                         "type": "object",
-                        "required": [
-                            "id"
-                        ],
                         "properties": {
-                            "id": {
-                                "type": "string",
-                                "example": "5798835568c0e021ebc6eb3e"
-                            },
-                            "created": {
-                                "type": "string",
-                                "format": "date-time",
-                                "example": "2016-01-28T17:37:11.482+0000",
-                                "readOnly": true
-                            },
-                            "modified": {
-                                "type": "string",
-                                "format": "date-time",
-                                "example": "2016-01-28T17:37:11.482+0000",
-                                "readOnly": true
-                            },
-                            "deleted": {
-                                "type": "boolean",
-                                "example": false,
-                                "default": false
-                            },
-                            "version": {
+                            "hoursAfterCreation": {
                                 "type": "integer",
-                                "format": "int64"
+                                "format": "int32",
+                                "description": "Defines how many hours after a conversation was created, the notifier should be triggered."
                             },
-                            "localVersion": {
-                                "type": "integer",
-                                "format": "int64"
-                            },
-                            "action": {
+                            "moduleId": {
                                 "type": "string",
-                                "enum": [
-                                    "PUSH_MODULE"
-                                ]
+                                "description": "Module ID of the module which will be added to the conversation, once the notifier is triggered."
                             },
-                            "triggerDate": {
-                                "type": "string",
-                                "format": "date-time"
+                            "taskIdentifiers": {
+                                "type": "array",
+                                "description": "List of task identifiers, which need to be finished to disable the notifier.",
+                                "items": {
+                                    "type": "string"
+                                }
                             }
                         }
                     }
@@ -474,6 +450,13 @@
                     "type": "boolean",
                     "description": "If true, the creator of the conversation will not be admin in the conversation. Instead the first added user will have the admin role.",
                     "default": false
+                },
+                "businessProcessKey": {
+                    "type": "string"
+                },
+                "readToIndex": {
+                    "type": "integer",
+                    "format": "int32"
                 }
             },
             "description": "Request to create a new conversation",
@@ -485,7 +468,7 @@
                     {
                         "senderId": "5798835568c0e021ebc6eb44",
                         "type": "CHAT",
-                        "timestamp": "2019-06-19T12:41:44.382Z",
+                        "timestamp": "2020-06-02T08:07:41.016Z",
                         "message": "Hello customer!",
                         "processed": false
                     }
@@ -529,25 +512,15 @@
                 },
                 "notifiers": [
                     {
-                        "id": "5d0a2d883a867f03b653a0c4",
-                        "deleted": false,
-                        "version": 0,
-                        "localVersion": 0,
-                        "action": "PUSH_MODULE",
+                        "hoursAfterCreation": 1,
+                        "moduleId": "some-module-id",
                         "taskIdentifiers": [
                             "task-ident"
-                        ],
-                        "moduleId": "some-module-id",
-                        "hoursAfterCreation": 1
+                        ]
                     }
                 ],
-                "temporaryTaskResults": {
-                    "modified": "2019-06-19T12:41:44.382Z",
-                    "source": "SYSTEM",
-                    "attributeGroup": "COMPOSED",
-                    "type": "COMPOSED"
-                },
-                "creatorNotAdmin": false
+                "creatorNotAdmin": false,
+                "readToIndex": -1
             }
         }
     }

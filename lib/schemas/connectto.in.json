@@ -1,0 +1,41 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "baseUrl",
+                "clientId",
+                "clientSecret",
+                "deskId",
+                "realm"
+            ],
+            "properties": {
+                "deskId": {
+                    "type": "string",
+                    "example": "3d0bfd34-07ec-4322-a13c-c87787172cdc"
+                },
+                "clientId": {
+                    "type": "string",
+                    "example": "com.fileee.thinkowl"
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "example": "230223falna1"
+                },
+                "realm": {
+                    "type": "string",
+                    "example": "test"
+                },
+                "baseUrl": {
+                    "type": "string",
+                    "example": "https://test.ityx.de"
+                }
+            }
+        }
+    }
+}

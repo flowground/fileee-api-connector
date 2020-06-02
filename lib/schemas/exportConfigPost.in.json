@@ -1,0 +1,37 @@
+{
+    "type": "object",
+    "properties": {
+        "mode": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "download",
+                "inline"
+            ],
+            "default": "inline"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "conversationTemplates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "emailTemplates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

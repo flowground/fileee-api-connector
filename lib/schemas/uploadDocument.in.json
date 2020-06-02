@@ -8,6 +8,11 @@
         "requestBody": {
             "type": "object",
             "properties": {
+                "file": {
+                    "description": "The binary file to upload.",
+                    "type": "string",
+                    "format": "binary"
+                },
                 "document": {
                     "description": "Initial document meta-data.",
                     "type": "string"
@@ -18,6 +23,7 @@
                 }
             },
             "required": [
+                "file",
                 "document"
             ]
         }

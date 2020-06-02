@@ -1,0 +1,81 @@
+{
+    "type": "object",
+    "properties": {
+        "customerId": {
+            "required": true,
+            "type": "string"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "required": [
+                "metaData",
+                "serviceId"
+            ],
+            "properties": {
+                "serviceId": {
+                    "type": "string",
+                    "description": "ID of the service which should be connected."
+                },
+                "metaData": {
+                    "type": "object",
+                    "description": "The values for this specific service instance used when service is executed by the user.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "verification": {
+                    "description": "Information needed for optional verification, like type and pin.",
+                    "type": "object",
+                    "required": [
+                        "type"
+                    ],
+                    "properties": {
+                        "tan": {
+                            "type": "string",
+                            "description": "The TAN the user has to enter to verify himself or herself."
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "The type of verification (NONE or TAN)",
+                            "enum": [
+                                "SMS",
+                                "PREDEFINED",
+                                "NONE"
+                            ]
+                        },
+                        "phoneNumber": {
+                            "type": "string",
+                            "example": "+49123456789"
+                        },
+                        "valid": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "templates": {
+                    "description": "Configuration of templates and modules for verification, update and disconnect.",
+                    "type": "object",
+                    "properties": {
+                        "lifecycle": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        "verification": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

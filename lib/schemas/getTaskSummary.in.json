@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "properties": {
+        "conversationId": {
+            "required": true,
+            "type": "string"
+        },
+        "taskIdentifier": {
+            "required": true,
+            "type": "string"
+        },
+        "mode": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "download",
+                "print"
+            ],
+            "default": "download"
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

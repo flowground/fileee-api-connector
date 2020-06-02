@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+        "mode": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "download",
+                "inline"
+            ],
+            "default": "inline"
+        }
+    }
+}

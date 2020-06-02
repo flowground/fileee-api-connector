@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "datasetUuid": {
+            "required": true,
+            "type": "string"
+        },
+        "modelType": {
+            "required": false,
+            "type": "string",
+            "enum": [
+                "ITAG_MODEL",
+                "ICAT_MODEL"
+            ]
+        },
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}

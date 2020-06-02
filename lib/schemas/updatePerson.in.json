@@ -40,19 +40,17 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "id": {
-                                "type": "string"
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "EMAIL",
+                                    "FILEEE",
+                                    "PHONE",
+                                    "TWITTER",
+                                    "FACEBOOK"
+                                ]
                             },
-                            "street": {
-                                "type": "string"
-                            },
-                            "zipCode": {
-                                "type": "string"
-                            },
-                            "city": {
-                                "type": "string"
-                            },
-                            "countryCode": {
+                            "value": {
                                 "type": "string"
                             }
                         }
@@ -106,6 +104,12 @@
                             "type": "string"
                         },
                         "brandTextColorCode": {
+                            "type": "string"
+                        },
+                        "primaryColorCode": {
+                            "type": "string"
+                        },
+                        "primaryTextColorCode": {
                             "type": "string"
                         }
                     }

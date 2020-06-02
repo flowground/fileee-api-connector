@@ -1,0 +1,147 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "type": "object",
+                    "properties": {
+                        "caseId": {
+                            "type": "string"
+                        },
+                        "session": {
+                            "type": "object",
+                            "properties": {
+                                "case": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "caseId": {
+                                            "type": "string"
+                                        },
+                                        "project": {
+                                            "type": "string"
+                                        },
+                                        "customerId": {
+                                            "type": "string"
+                                        },
+                                        "customer": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "external_id": {
+                                                    "type": "string"
+                                                },
+                                                "first_name": {
+                                                    "type": "string"
+                                                },
+                                                "last_name": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "PERSON",
+                                                        "ORGANIZATION"
+                                                    ]
+                                                },
+                                                "addresses": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "EMAIL",
+                                                                    "FILEEE",
+                                                                    "PHONE",
+                                                                    "TWITTER",
+                                                                    "FACEBOOK"
+                                                                ]
+                                                            },
+                                                            "value": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "customerName": {
+                                            "type": "string"
+                                        },
+                                        "channel": {
+                                            "type": "string",
+                                            "enum": [
+                                                "CHAT",
+                                                "EMAIL",
+                                                "FILEEE"
+                                            ]
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "priority": {
+                                            "type": "integer",
+                                            "format": "int32"
+                                        },
+                                        "externalReference": {
+                                            "type": "string",
+                                            "format": "uri"
+                                        },
+                                        "language": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "OPEN",
+                                                "PENDING",
+                                                "RESOLVED"
+                                            ]
+                                        },
+                                        "caseFields": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "key": {
+                                                        "type": "string"
+                                                    },
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "read_only": {
+                                                        "type": "boolean",
+                                                        "default": false
+                                                    },
+                                                    "case_global": {
+                                                        "type": "boolean",
+                                                        "default": false
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
